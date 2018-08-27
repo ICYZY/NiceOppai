@@ -26,7 +26,7 @@ class ServiceHandler extends AsyncTask<Void, Void, Void> {
                     String s;
                     Boolean t = false;
                     while ((s = r.readLine()) != null) {
-                        if (s.contains("<div class=\"wrap\">")) {
+                        if (s.contains("<div class=\"textwidget\">")) {
                             t = true;
                         } else if (s.contains("/body>")) {
                             t = false;
