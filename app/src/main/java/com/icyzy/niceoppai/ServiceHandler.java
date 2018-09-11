@@ -3,18 +3,16 @@ package com.icyzy.niceoppai;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-class ServiceHandler extends AsyncTask<Void, Void, Void> {
+class ServiceHandler extends AsyncTask<Void, Void, String[]> {
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected String[] doInBackground(Void... voids) {
         try {
             URL url = new URL("http://www.niceoppai.net");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -50,7 +48,7 @@ class ServiceHandler extends AsyncTask<Void, Void, Void> {
                     Log.d("Test", us);
                 }
                 Log.d("Line", String.valueOf(i));
-                return null;
+                return use.toArray(new String[use.size()]);
             } catch (Exception e) {
 
             }
@@ -62,5 +60,4 @@ class ServiceHandler extends AsyncTask<Void, Void, Void> {
         }
         return null;
     }
-
 }
