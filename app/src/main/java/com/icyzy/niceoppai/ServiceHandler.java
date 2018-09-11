@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 class ServiceHandler extends AsyncTask<Void, Void, String[]> {
+    private ArrayList<String> use = new ArrayList<>();
 
     @Override
     protected String[] doInBackground(Void... voids) {
@@ -18,46 +19,31 @@ class ServiceHandler extends AsyncTask<Void, Void, String[]> {
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {
                 InputStreamReader in = new InputStreamReader(urlConnection.getInputStream());
-                BufferedReader r = new BufferedReader(in);
-                ArrayList<String> lines = new ArrayList<String>();
-                ArrayList<String> use = new ArrayList<String>();
+                ArrayList<String> lines = new ArrayList<>();
 //                StringBuilder sb = new StringBuilder();
-                Integer i = 1;
-                try {
-                    String s;
+                try (BufferedReader reader = new BufferedReader(in)) {
+                    String htmlTag;
                     Boolean t = false;
-                    while ((s = r.readLine()) != null) {
-                        if (s.contains("<div class=\"wpm_pag mng_lts_chp grp\">")) {
+                    while ((htmlTag = reader.readLine()) != null) {
+                        if (htmlTag.contains("<div class=\"wpm_pag mng_lts_chp grp\">")) {
                             t = true;
-                        } else if (s.contains("<div class=\"wpm_nav\">\n")) {
+                        } else if (htmlTag.contains("<div class=\"wpm_nav\">\n")) {
                             t = false;
                         }
-                        if (t && !s.contains("</div>") && !s.contains("</a>") && !s.contains("</li>") && !s.contains("<li>") && !s.contains("</ul>") && (s.contains("href")) || s.contains("<img src")){
-                            lines.add(s);
-//                            sb.append("\n");
-                            i++;
+                        if (t && !htmlTag.contains("</div>") && !htmlTag.contains("</a>") && !htmlTag.contains("</li>") && !htmlTag.contains("<li>") && !htmlTag.contains("</ul>") && (htmlTag.contains("href")) || htmlTag.contains("<img src")) {
+                            lines.add(htmlTag);
                         }
                     }
-                } finally {
-                    r.close();
                 }
                 for (int i1 = 9; i1 < lines.size(); i1++) {
                     use.add(lines.get(i1));
                 }
-                for (String us: use) {
-                    Log.d("Test", us);
-                }
-                Log.d("Line", String.valueOf(i));
-                return use.toArray(new String[use.size()]);
             } catch (Exception e) {
-
+                Log.e("ERROR", e.getMessage(), e);
             }
-
         } catch (Exception e) {
             Log.e("ERROR", e.getMessage(), e);
-            return null;
-
         }
-        return null;
+        return use.toArray(new String[use.size()]);
     }
 }
